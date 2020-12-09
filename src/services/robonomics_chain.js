@@ -14,15 +14,7 @@ export function getInstance() {
   const provider = new WsProvider(config.ROBONOMICS_CHAIN_API);
   return ApiPromise.create({
     provider,
-    types: {
-      Record: "Vec<u8>",
-      TechnicalParam: "Vec<u8>",
-      TechnicalReport: "Vec<u8>",
-      EconomicalParam: "{}",
-      ProofParam: "MultiSignature",
-      LiabilityIndex: "u64",
-      Parameter: "Vec<u8>",
-    },
+    types: config.TYPES,
   }).then((r) => {
     instance = r;
     return r;
