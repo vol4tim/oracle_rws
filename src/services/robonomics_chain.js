@@ -1,5 +1,5 @@
 import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
-import config from "../config";
+import config from "../../config.json";
 import logger from "./logger";
 
 let instance = null;

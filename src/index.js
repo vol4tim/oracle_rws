@@ -6,7 +6,7 @@ import prom from "./services/prom";
 import logger from "./services/logger";
 import express from "express";
 import createServer from "./server";
-import config from "./config";
+import config from "../config.json";
 
 const app = express();
 const server = createServer(app);

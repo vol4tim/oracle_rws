@@ -1,7 +1,7 @@
 import fs from "fs";
 import https from "https";
 import http from "http";
-import config from "./config";
+import config from "../config.json";
 
 export default (app) => {
   if (config.SSL_ENABLE) {
