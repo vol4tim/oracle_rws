@@ -5,16 +5,10 @@
   "ETH_CHAIN_API": "",
   "ROBONOMICS_CHAIN_API": "",
   "TYPES": {
+    "Address": "AccountId",
+    "LookupSource": "AccountId",
     "Record": "Vec<u8>",
-    "TechnicalParam": "Vec<u8>",
-    "TechnicalReport": "Vec<u8>",
-    "EconomicalParam": "{}",
-    "ProofParam": "MultiSignature",
-    "LiabilityIndex": "u64",
-    "Parameter": "Vec<u8>",
-    "Bounty": "",
-    "BountyIndex": "u32",
-    "ValidationData": ""
+    "Parameter": "Bool"
   },
   "CONTRACT": "0x3BD98A58930eE3a360493aA081758b36E263Bd49",
   "ORACLE": ""

@@ -1,16 +1,20 @@
 import Web3 from "web3";
-import { encodeAddress } from "@polkadot/util-crypto";
-import { getBandwidth, setBandwidth } from "./robonomics_chain";
+import {
+  getInstance,
+  getBandwidth,
+  setBandwidth,
+  addressToRobonomics,
+} from "./robonomics_chain";
 import { contract } from "./eth_chain";
 import logger from "./logger";
 
-export function addressToRobonomics(account) {
-  return encodeAddress(account);
-}
-
 export async function updateAccount(account, amount) {
-  const r = await setBandwidth(account, amount);
-  logger.info(`${account} ${amount}\nblock: ${r.block}\ntx: ${r.tx}`);
+  try {
+    const r = await setBandwidth(account, amount);
+    logger.info(`${account} ${amount}\nblock: ${r.block}\ntx: ${r.tx}`);
+  } catch (error) {
+    logger.error(`${error.message} | update account ${account}`);
+  }
 }
 export async function getStake(sender) {
   const stake = await contract.methods.stakeOf(sender).call();
@@ -30,6 +34,7 @@ export async function getDeactivatedAccounts() {
 }
 
 export async function updateAll() {
+  await getInstance();
   const deactivatedAccounts = await getDeactivatedAccounts();
   const countAccounts = await contract.methods.activeAccountsLenght().call();
   for (let index = 0; index < countAccounts; index++) {
@@ -38,6 +43,7 @@ export async function updateAll() {
 
     const account = stake.account;
     const bandwidth = await getBandwidth(account);
+    // console.log(Number(bandwidth));
 
     if (stake.status !== "1" && bandwidth > 0) {
       // console.log(sender, account, "0");
