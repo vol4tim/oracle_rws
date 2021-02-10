@@ -3,6 +3,14 @@
   "HOST": "127.0.0.1",
   "PORT": "3000",
   "ETH_CHAIN_API": "",
+  "ETH_OPTIONS": {
+    "reconnect": {
+      "auto": true,
+      "delay": 5000,
+      "maxAttempts": 5,
+      "onTimeout": false
+    }
+  },
   "ROBONOMICS_CHAIN_API": "",
   "TYPES": {
     "Address": "AccountId",
