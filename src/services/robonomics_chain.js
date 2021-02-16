@@ -66,10 +66,10 @@ export async function setBandwidth(account, share) {
     return Promise.reject(new Error(`Not connected`));
   }
   const oracle = getOracleAccount();
-  // const balance = await getBalance(oracle.address);
-  const balance = await getBalance(
-    "4HQk933sAspxah4pP9kHmxLZNHjxrFLa1vM1VC4ESsSLyos4"
-  );
+  const balance = await getBalance(oracle.address);
+  // const balance = await getBalance(
+  //   "4HQk933sAspxah4pP9kHmxLZNHjxrFLa1vM1VC4ESsSLyos4"
+  // );
   if (balance <= 1000000000) {
     return Promise.reject(
       new Error(`oracle low balance ${formatBalance(balance)}`)
