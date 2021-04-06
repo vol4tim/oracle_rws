@@ -43,23 +43,16 @@ export async function updateAll() {
 
     const account = stake.account;
     const bandwidth = await getBandwidth(account);
-    // console.log(Number(bandwidth));
 
     if (stake.status !== "1" && bandwidth > 0) {
-      // console.log(sender, account, "0");
       await updateAccount(account, "0");
     } else if (stake.status === "1") {
       const share = new Web3.utils.BN(stake.amount).div(
         new Web3.utils.BN("100000000000")
       );
       if (!share.eq(Web3.utils.toBN(bandwidth))) {
-        // console.log(sender, account, share.toString(), "up");
         await updateAccount(account, share.toString());
-      } else {
-        // console.log(sender, account, share.toString(), "skip");
       }
-    } else {
-      // console.log(sender, account);
     }
 
     const id = deactivatedAccounts.indexOf(account);

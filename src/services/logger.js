@@ -52,10 +52,6 @@ const logger = winston.createLogger({
   exitOnError: false,
 });
 
-// process.on("uncaughtException", function (err) {
-//   console.log("UNCAUGHT EXCEPTION ");
-//   console.log("[Inside 'uncaughtException' event] " + err.stack || err.message);
-// });
 process.on("unhandledRejection", (e) => {
   logger.error(e.message);
   // throw e;

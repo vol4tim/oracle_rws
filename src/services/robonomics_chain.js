@@ -19,15 +19,6 @@ export function getInstance() {
     });
   }
   provider = new WsProvider(config.ROBONOMICS_CHAIN_API);
-  // provider.on("connected", () => {
-  //   console.log("connected");
-  // });
-  // provider.on("disconnected", () => {
-  //   console.log("disconnected");
-  // });
-  // provider.on("error", () => {
-  //   console.log("error");
-  // });
   return ApiPromise.create({
     provider,
     types: config.TYPES,
@@ -41,7 +32,6 @@ export function getOracleAccount() {
   if (oracleAccount) {
     return oracleAccount;
   }
-  // const keyring = new Keyring({ type: "sr25519", ss58Format: 32 });
   const keyring = new Keyring({ type: "sr25519" });
   keyring.setSS58Format(instance.registry.chainSS58);
   oracleAccount = keyring.addFromUri(config.ORACLE, { name: "Oracle" });
@@ -67,9 +57,6 @@ export async function setBandwidth(account, share) {
   }
   const oracle = getOracleAccount();
   const balance = await getBalance(oracle.address);
-  // const balance = await getBalance(
-  //   "4HQk933sAspxah4pP9kHmxLZNHjxrFLa1vM1VC4ESsSLyos4"
-  // );
   if (balance <= 1000000000) {
     return Promise.reject(
       new Error(`oracle low balance ${formatBalance(balance)}`)
