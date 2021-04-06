@@ -50,7 +50,7 @@ export async function updateAll() {
       const share = new Web3.utils.BN(stake.amount).div(
         new Web3.utils.BN("100000000000")
       );
-      if (!share.eq(Web3.utils.toBN(bandwidth))) {
+      if (!share.eq(Web3.utils.toBN(bandwidth.toString()))) {
         await updateAccount(account, share.toString());
       }
     }
