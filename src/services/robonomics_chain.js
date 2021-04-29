@@ -9,23 +9,24 @@ let provider = null;
 let oracleAccount = null;
 
 export function getProvider() {
+  if (provider) {
+    return provider;
+  }
+  provider = new WsProvider(config.ROBONOMICS_CHAIN_API);
   return provider;
 }
 
-export function getInstance() {
+export async function getInstance(provider) {
   if (instance) {
     return new Promise(function (resolve) {
       resolve(instance);
     });
   }
-  provider = new WsProvider(config.ROBONOMICS_CHAIN_API);
-  return ApiPromise.create({
+  instance = await ApiPromise.create({
     provider,
     types: config.TYPES,
-  }).then((r) => {
-    instance = r;
-    return r;
   });
+  return instance;
 }
 
 export function getOracleAccount() {
@@ -66,6 +67,10 @@ export async function setBandwidth(account, share) {
   return new Promise(function (resolve, reject) {
     let unsub;
     tx.signAndSend(oracle, (result) => {
+      if (result.status.isInBlock) {
+        console.log(result.status.asInBlock.toString());
+      }
+
       if (result.status.isFinalized) {
         unsub();
         resolve({

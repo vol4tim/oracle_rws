@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import { contract } from "./services/eth_chain";
-import { getInstance } from "./services/robonomics_chain";
+import { getProvider, getInstance } from "./services/robonomics_chain";
 import { updateAccount, getStake } from "./services/utils";
 import prom from "./services/prom";
 import logger from "./services/logger";
@@ -18,7 +18,15 @@ server.listen(config.PORT, config.HOST, () => {
 });
 
 async function main() {
-  await getInstance();
+  const provider = getProvider();
+  provider.on("connected", () => logger.info("connected provider"));
+  provider.on("error", () => {
+    logger.error(`error provider`);
+  });
+  provider.on("disconnect", () => {
+    logger.error(`disconnect provider`);
+  });
+  await getInstance(provider);
   console.log("app started");
 
   contract.events

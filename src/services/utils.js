@@ -4,6 +4,7 @@ import {
   getBandwidth,
   setBandwidth,
   addressToRobonomics,
+  getProvider,
 } from "./robonomics_chain";
 import { contract } from "./eth_chain";
 import logger from "./logger";
@@ -33,8 +34,22 @@ export async function getDeactivatedAccounts() {
   });
 }
 
-export async function updateAll() {
-  await getInstance();
+export async function updateAll(cb = null) {
+  const provider = getProvider();
+  provider.on("connected", () => logger.info("connected provider"));
+  provider.on("error", () => {
+    logger.error(`error provider`);
+    if (cb) {
+      cb();
+    }
+  });
+  provider.on("disconnect", () => {
+    logger.error(`disconnect provider`);
+    if (cb) {
+      cb();
+    }
+  });
+  await getInstance(provider);
   const deactivatedAccounts = await getDeactivatedAccounts();
   const countAccounts = await contract.methods.activeAccountsLenght().call();
   for (let index = 0; index < countAccounts; index++) {
