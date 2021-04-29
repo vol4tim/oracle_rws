@@ -1,5 +1,9 @@
 import { updateAll } from "./services/utils";
 
+process.on("unhandledRejection", () => {
+  process.exit(0);
+});
+
 async function main() {
   console.log("app started");
   await updateAll(() => {
