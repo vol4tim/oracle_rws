@@ -27,11 +27,12 @@ async function main() {
     logger.error(`disconnect provider`);
   });
   await getInstance(provider);
-  console.log("app started");
+  logger.info("app started");
 
   contract.events
     .Activated()
     .on("data", async function (event) {
+      logger.info(`New Tx: ${event.transactionHash}`);
       const stake = await getStake(event.returnValues.sender);
       const share = new Web3.utils.BN(stake.amount).div(
         new Web3.utils.BN("100000000000")
@@ -39,7 +40,7 @@ async function main() {
       updateAccount(stake.account, share.toString());
     })
     .on("error", function (error, receipt) {
-      console.log(error, receipt);
+      logger.error(`${error.message} ${JSON.stringify(receipt)}`);
     });
   contract.events
     .Deactivated()
@@ -48,7 +49,7 @@ async function main() {
       updateAccount(stake.account, "0");
     })
     .on("error", function (error, receipt) {
-      console.log(error, receipt);
+      logger.error(`${error.message} ${JSON.stringify(receipt)}`);
     });
 }
 

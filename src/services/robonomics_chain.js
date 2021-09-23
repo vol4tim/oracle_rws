@@ -65,26 +65,38 @@ export async function setBandwidth(account, share) {
   }
   const tx = api.tx.rws.setBandwidth(account, share);
   return new Promise(function (resolve, reject) {
-    let unsub;
     tx.signAndSend(oracle, (result) => {
       if (result.status.isInBlock) {
-        console.log(result.status.asInBlock.toString());
-      }
-
-      if (result.status.isFinalized) {
-        unsub();
-        resolve({
-          block: result.status.asFinalized.toString(),
-          tx: tx.hash.toString(),
+        result.events.forEach(async (events) => {
+          const {
+            event: { data, method, section },
+            phase,
+          } = events;
+          if (section === "system" && method === "ExtrinsicFailed") {
+            let message = "Error";
+            if (data[0].isModule) {
+              const mod = data[0].asModule;
+              // const mod = result.dispatchError.asModule;
+              const { docs, name, section } = mod.registry.findMetaError(mod);
+              console.log(name, section, docs);
+              message = docs.join(", ");
+            }
+            return reject(new Error(message));
+          } else if (section === "system" && method === "ExtrinsicSuccess") {
+            const block = await api.rpc.chain.getBlock(
+              result.status.asInBlock.toString()
+            );
+            resolve({
+              block: result.status.asInBlock.toString(),
+              blockNumber: block.block.header.number.toNumber(),
+              // const index = phase.value.toNumber();
+              txIndex: phase.asApplyExtrinsic.toHuman(),
+              tx: tx.hash.toString(),
+            });
+          }
         });
       }
-    })
-      .then(function (r) {
-        unsub = r;
-      })
-      .catch(function (e) {
-        reject(e);
-      });
+    }).catch(reject);
   });
 }
 
